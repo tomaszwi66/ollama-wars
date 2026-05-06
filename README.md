@@ -1,5 +1,7 @@
 # OLLAMA WARS
 
+![Ollama Wars](crawl.jpg)
+
 A Star Wars opening crawl themed chat interface for Ollama. Your messages appear in white, AI responses in classic Star Wars yellow. Everything scrolls away into the galaxy on a black starfield with a 3D perspective effect.
 
 ## Preview
