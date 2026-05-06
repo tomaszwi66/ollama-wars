@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OLLAMA WARS</title>
+<link href="https://fonts.googleapis.com/css2?family=Pathway+Gothic+One&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #000;
+  color: #fff;
+  font-family: 'Pathway Gothic One', sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#stars {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  background:
+    radial-gradient(1px 1px at 10% 15%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 22% 80%, #fff 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 35% 42%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 47% 7%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 58% 63%, #fff 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 70% 28%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 82% 90%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 91% 50%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 5%  55%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 33%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 28% 68%, #fff 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 40% 88%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 52% 22%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 64% 77%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 76% 12%, #fff 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 88% 44%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 95% 72%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 3%  91%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 18% 5%,  #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 33% 18%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 44% 52%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 38%, #fff 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 67% 95%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 79% 60%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 86% 20%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 97% 85%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 8%  40%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 58%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 37% 3%,  #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 61% 48%, #fff 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 73% 75%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 84% 35%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 93% 10%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 12% 70%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 48% 95%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 57% 15%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 20% 25%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 43% 72%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 68% 88%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 30%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    #000;
+}
+
+/* MODEL SELECT SCREEN */
+#select-screen {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 30px;
+}
+
+#select-screen h1 {
+  font-size: 5rem;
+  color: #FFE81F;
+  text-shadow: 0 0 20px rgba(255,232,31,0.6), 0 0 60px rgba(255,232,31,0.3);
+  letter-spacing: 0.15em;
+}
+
+#select-screen p {
+  color: rgba(255,232,31,0.4);
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+#select-screen select, #select-screen button {
+  font-family: 'Pathway Gothic One', sans-serif;
+  font-size: 1.4rem;
+  padding: 12px 40px;
+  border: 2px solid #FFE81F;
+  background: transparent;
+  color: #FFE81F;
+  cursor: pointer;
+  outline: none;
+  letter-spacing: 0.05em;
+  min-width: 300px;
+}
+
+#select-screen select option {
+  background: #000;
+  color: #FFE81F;
+}
+
+#select-screen button:hover {
+  background: #FFE81F;
+  color: #000;
+  transition: all 0.2s;
+}
+
+/* CHAT SCREEN */
+#chat-screen {
+  display: none;
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.crawl-container {
+  flex: 1;
+  perspective: 300px;
+  overflow: hidden;
+  position: relative;
+}
+
+.crawl-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 45%;
+  background: linear-gradient(to bottom, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.crawl-content {
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  right: 25%;
+  max-height: 100%;
+  transform: rotateX(28deg);
+  transform-origin: 50% 100%;
+  overflow-y: auto;
+  padding: 300px 0 40px 0;
+  scrollbar-width: none;
+}
+
+.crawl-content::-webkit-scrollbar { display: none; }
+
+.message {
+  padding: 14px 0;
+  font-size: 1.45rem;
+  line-height: 1.6;
+  text-align: center;
+  animation: fadeIn 0.4s ease-in;
+  word-wrap: break-word;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.msg-user {
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(255,255,255,0.4);
+  font-style: italic;
+}
+
+.msg-ai {
+  color: #FFE81F;
+  text-shadow: 0 0 8px rgba(255,232,31,0.35);
+  font-style: italic;
+}
+
+.msg-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  opacity: 0.35;
+  margin-bottom: 6px;
+  font-style: normal;
+}
+
+.msg-divider {
+  border: none;
+  border-top: 1px solid rgba(255,232,31,0.1);
+  margin: 8px auto;
+  width: 40%;
+}
+
+#input-bar {
+  position: relative;
+  z-index: 10;
+  padding: 12px 25% 16px;
+  display: flex;
+  gap: 10px;
+  background: linear-gradient(to top, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+}
+
+#msg-input {
+  flex: 1;
+  font-family: 'Pathway Gothic One', sans-serif;
+  font-size: 1.2rem;
+  padding: 10px 18px;
+  border: 1px solid rgba(255,232,31,0.5);
+  background: rgba(255,232,31,0.04);
+  color: #FFE81F;
+  outline: none;
+  letter-spacing: 0.03em;
+}
+
+#msg-input::placeholder { color: rgba(255,232,31,0.25); }
+#msg-input:disabled { opacity: 0.3; }
+
+#model-label {
+  position: fixed;
+  top: 10px;
+  right: 15px;
+  z-index: 20;
+  color: #FFE81F;
+  opacity: 0.25;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<div id="select-screen">
+  <h1>OLLAMA WARS</h1>
+  <p>A long time ago in a galaxy far, far away...</p>
+  <select id="model-dropdown">
+    <option value="">Loading models...</option>
+  </select>
+  <button id="start-btn">BEGIN</button>
+</div>
+
+<div id="chat-screen">
+  <div class="crawl-container">
+    <div class="crawl-content" id="crawl"></div>
+  </div>
+  <div id="input-bar">
+    <input type="text" id="msg-input" placeholder="Type a message and press Enter..." autocomplete="off">
+  </div>
+</div>
+
+<div id="model-label"></div>
+
+<script>
+const dropdown = document.getElementById('model-dropdown');
+const startBtn = document.getElementById('start-btn');
+const selectScreen = document.getElementById('select-screen');
+const chatScreen = document.getElementById('chat-screen');
+const crawl = document.getElementById('crawl');
+const msgInput = document.getElementById('msg-input');
+const modelLabel = document.getElementById('model-label');
+
+let selectedModel = '';
+let conversationHistory = [];
+let streaming = false;
+
+fetch('http://localhost:11434/api/tags')
+  .then(r => r.json())
+  .then(data => {
+    dropdown.innerHTML = '';
+    if (!data.models || data.models.length === 0) {
+      dropdown.innerHTML = '<option value="">No models found</option>';
+      return;
+    }
+    for (const m of data.models) {
+      const opt = document.createElement('option');
+      opt.value = m.name;
+      opt.textContent = m.name;
+      dropdown.appendChild(opt);
+    }
+  })
+  .catch(() => {
+    dropdown.innerHTML = '<option value="">Cannot connect to Ollama</option>';
+  });
+
+startBtn.addEventListener('click', () => {
+  selectedModel = dropdown.value;
+  if (!selectedModel) return;
+  selectScreen.style.display = 'none';
+  chatScreen.style.display = 'flex';
+  modelLabel.textContent = selectedModel;
+  msgInput.focus();
+});
+
+function addDivider() {
+  const hr = document.createElement('hr');
+  hr.className = 'msg-divider';
+  crawl.appendChild(hr);
+}
+
+function addMessage(text, role) {
+  const div = document.createElement('div');
+  div.className = `message ${role === 'user' ? 'msg-user' : 'msg-ai'}`;
+  const label = document.createElement('div');
+  label.className = 'msg-label';
+  label.textContent = role === 'user' ? '· you ·' : '· ai ·';
+  div.appendChild(label);
+  const content = document.createElement('div');
+  content.textContent = text;
+  div.appendChild(content);
+  crawl.appendChild(div);
+  if (autoScroll) crawl.scrollTop = crawl.scrollHeight;
+  return content;
+}
+
+function createAiMessage() {
+  const div = document.createElement('div');
+  div.className = 'message msg-ai';
+  const label = document.createElement('div');
+  label.className = 'msg-label';
+  label.textContent = '· ai ·';
+  div.appendChild(label);
+  const content = document.createElement('div');
+  div.appendChild(content);
+  crawl.appendChild(div);
+  if (autoScroll) crawl.scrollTop = crawl.scrollHeight;
+  return content;
+}
+
+async function sendMessage(text) {
+  streaming = true;
+  msgInput.disabled = true;
+  autoScroll = true;
+
+  if (conversationHistory.length > 0) addDivider();
+  addMessage(text, 'user');
+  conversationHistory.push({ role: 'user', content: text });
+
+  addDivider();
+  const aiContent = createAiMessage();
+  let fullResponse = '';
+
+  try {
+    const res = await fetch('http://localhost:11434/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: selectedModel,
+        messages: conversationHistory
+      })
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        try {
+          const data = JSON.parse(line);
+          if (data.message && data.message.content) {
+            fullResponse += data.message.content;
+            aiContent.textContent = fullResponse;
+            if (autoScroll) crawl.scrollTop = crawl.scrollHeight;
+          }
+        } catch {}
+      }
+    }
+
+    if (buffer.trim()) {
+      try {
+        const data = JSON.parse(buffer);
+        if (data.message && data.message.content) {
+          fullResponse += data.message.content;
+          aiContent.textContent = fullResponse;
+        }
+      } catch {}
+    }
+
+    conversationHistory.push({ role: 'assistant', content: fullResponse });
+  } catch (err) {
+    aiContent.textContent = 'Connection error: ' + err.message;
+  }
+
+  streaming = false;
+  msgInput.disabled = false;
+  msgInput.focus();
+}
+
+// Scroll forwarding: wheel and middle mouse drag on the 3D container
+const crawlContainer = document.querySelector('.crawl-container');
+
+crawlContainer.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  crawl.scrollTop += e.deltaY;
+}, { passive: false });
+
+let midDrag = false;
+let midDragStartY = 0;
+let midDragStartScroll = 0;
+
+crawlContainer.addEventListener('mousedown', (e) => {
+  if (e.button !== 1) return;
+  e.preventDefault();
+  midDrag = true;
+  midDragStartY = e.clientY;
+  midDragStartScroll = crawl.scrollTop;
+  crawlContainer.style.cursor = 'ns-resize';
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (!midDrag) return;
+  const delta = e.clientY - midDragStartY;
+  crawl.scrollTop = midDragStartScroll + delta * 1.5;
+});
+
+window.addEventListener('mouseup', (e) => {
+  if (e.button !== 1) return;
+  midDrag = false;
+  crawlContainer.style.cursor = '';
+});
+
+let autoScroll = true;
+
+crawlContainer.addEventListener('wheel', () => {
+  const atBottom = crawl.scrollTop >= crawl.scrollHeight - crawl.clientHeight - 10;
+  autoScroll = atBottom;
+}, { passive: true });
+
+msgInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !streaming) {
+    const text = msgInput.value.trim();
+    if (!text) return;
+    msgInput.value = '';
+    sendMessage(text);
+  }
+});
+</script>
+</body>
+</html>
